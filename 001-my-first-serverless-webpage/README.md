@@ -1,7 +1,6 @@
 ## based on
 * Udemy: AWS Certified Developer - Associate 2020
-* Lecture 36: Build a Simple Serverless Website with Route 53, API Gateway, Lambda and S3
-https://www.udemy.com/course/aws-certified-developer-associate/learn/lecture/2442592#overview
+* [Lecture 36: Build a Simple Serverless Website with Route 53, API Gateway, Lambda and S3](https://www.udemy.com/course/aws-certified-developer-associate/learn/lecture/2442592#overview)
 
 ## steps
 1) Create a bucket: `brunos-dashboard`
