@@ -16,21 +16,21 @@
     2) Add API Gateway as trigger: (default name: `get-all-tasks-serverless-task-list-API`)
         * This can be done from the AWS::Lambda service
         * Security: Open (TODO: add security)
-    3) recreate your API-Gateway-method as 'get' instead of 'any'
+    3) recreate your API-Gateway-method as 'GET' instead of 'ANY'
         * select: Use Lambda Proxy integration
     3) Deploy your API
     4) Adapt index.html to call you lambda
     ```javascript
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            let tasks = JSON.parse(this.response);
-            for (let i = 0; i < tasks.length; i++)
-                renderTaskElement(tasks[i].description, tasks[i].isCompleted)
-        }
-    };
-    xhttp.open("GET", "https://wtka97jyek.execute-api.eu-west-1.amazonaws.com/default/get-all-tasks-serverless-task-list", true);
-    xhttp.send();
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                let tasks = JSON.parse(this.response);
+                for (let i = 0; i < tasks.length; i++)
+                    renderTaskElement(tasks[i].description, tasks[i].isCompleted)
+            }
+        };
+        xhttp.open("GET", "https://wtka97jyek.execute-api.eu-west-1.amazonaws.com/default/get-all-tasks-serverless-task-list", true);
+        xhttp.send();
     ```
 
 ## Generated resources (to delete to undo this setup):
