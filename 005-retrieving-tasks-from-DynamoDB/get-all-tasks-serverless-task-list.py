@@ -8,6 +8,7 @@ def lambda_handler(event, context):
     response = dynamodb.scan(TableName='task-list')
     tasks = list(
         {
+            'PK': item['PK']['S'],
             'description': item['description']['S'],
             'isCompleted': item['isCompleted']['BOOL'],
         }

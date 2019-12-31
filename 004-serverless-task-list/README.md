@@ -12,22 +12,7 @@
     1) Create a lambda function for your backend: `get-all-tasks-serverless-task-list`
         * With a new IAM Role: `serverless-task-list-role`
             * Based on the Policy template: `Simple microservice permissions`
-    ```python
-    import json
-    
-    def lambda_handler(event, context):
-        return {
-            "statusCode": 200,
-            "headers": {
-                "Access-Control-Allow-Origin": "*",
-            },
-            "body": json.dumps([
-                {"description": "Pay Bills", "isCompleted": False},
-                {"description": "Go Shopping", "isCompleted": False},
-                {"description": "See the Doctor", "isCompleted": True},
-            ])
-        }
-    ```  
+        * Based on this [script](get-all-tasks-serverless-task-list.py)
     2) Add API Gateway as trigger: (default name: `get-all-tasks-serverless-task-list-API`)
         * This can be done from the AWS::Lambda service
         * Security: Open (TODO: add security)
