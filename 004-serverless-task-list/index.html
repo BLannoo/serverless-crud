@@ -1,0 +1,61 @@
+<html>
+<body>
+<div style="width: 400px; margin: 100px auto 0;">
+    <input id="new-task" type="text">
+    <button id="add-new-task">Add task</button>
+    <h3>Tasks:</h3>
+    <div id="tasks-holder"></div>
+</div>
+<script>
+    const addTask = function () {
+        renderTaskElement(document.getElementById("new-task").value, false);
+        document.getElementById("new-task").value = "";
+    };
+    document.getElementById("add-new-task").addEventListener("click", addTask);
+
+    const renderTaskElement = function (description, isCompleted) {
+        const listItem = document.createElement("div");
+
+        const checkBox = document.createElement("input");
+        checkBox.type = "checkBox";
+        checkBox.onchange = toggleTaskState;
+        checkBox.checked = isCompleted;
+        listItem.appendChild(checkBox);
+
+        const deleteButton = document.createElement("button");
+        deleteButton.innerText = "X";
+        deleteButton.onclick = deleteTask;
+        listItem.appendChild(deleteButton);
+
+        listItem.appendChild(document.createTextNode(description));
+        listItem.style.textDecoration = isCompleted ? "line-through" : "none";
+
+        document.getElementById("tasks-holder").appendChild(listItem);
+    };
+
+    const deleteTask = function () {
+        const listItem = this.parentNode;
+        const taskHolder = listItem.parentNode;
+        taskHolder.removeChild(listItem);
+    };
+
+    const toggleTaskState = function () {
+        if (this.parentNode.querySelector('input[type="checkbox"]').checked)
+            this.parentNode.style.textDecoration = "line-through";
+        else
+            this.parentNode.style.textDecoration = "none";
+    };
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            let tasks = JSON.parse(this.response);
+            for (let i = 0; i < tasks.length; i++)
+                renderTaskElement(tasks[i].description, tasks[i].isCompleted)
+        }
+    };
+    xhttp.open("GET", "https://wtka97jyek.execute-api.eu-west-1.amazonaws.com/default/get-all-tasks-serverless-task-list", true);
+    xhttp.send();
+</script>
+</body>
+</html>
