@@ -13,7 +13,7 @@
     };
     document.getElementById("add-new-task").addEventListener("click", addTask);
 
-    const renderTaskElement = function (taskString, isCompleted) {
+    const renderTaskElement = function (description, isCompleted) {
         const listItem = document.createElement("div");
 
         const checkBox = document.createElement("input");
@@ -27,7 +27,7 @@
         deleteButton.onclick = deleteTask;
         listItem.appendChild(deleteButton);
 
-        listItem.appendChild(document.createTextNode(taskString));
+        listItem.appendChild(document.createTextNode(description));
         listItem.style.textDecoration = isCompleted ? "line-through" : "none";
 
         document.getElementById("tasks-holder").appendChild(listItem);
@@ -35,8 +35,8 @@
 
     const deleteTask = function () {
         const listItem = this.parentNode;
-        const ul = listItem.parentNode;
-        ul.removeChild(listItem);
+        const taskHolder = listItem.parentNode;
+        taskHolder.removeChild(listItem);
     };
 
     const toggleTaskState = function () {
