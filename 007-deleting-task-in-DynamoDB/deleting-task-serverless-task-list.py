@@ -6,12 +6,10 @@ dynamodb = boto3.client('dynamodb')
 
 def lambda_handler(event, context):
     data = json.loads(event['body'])
-    dynamodb.put_item(
+    dynamodb.delete_item(
         TableName='task-list',
-        Item={
-            'PK': {'S': data['PK']},
-            'description': {'S': data['description']},
-            'isCompleted': {'BOOL': data['isCompleted']}
+        Key={
+            'PK': {'S': data['PK']}
         }
     )
     return {

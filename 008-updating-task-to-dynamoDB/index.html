@@ -1,0 +1,80 @@
+<html>
+<body>
+<div style="width: 400px; margin: 100px auto 0;">
+    <input id="new-task" type="text">
+    <button id="add-new-task">Add task</button>
+    <h3>Tasks:</h3>
+    <div id="tasks-holder"></div>
+</div>
+<script src="http://wzrd.in/standalone/uuid%2Fv4@latest"></script>
+<script>
+    const addTask = function () {
+        let newTask = {
+            "PK": "TASK#" + uuidv4(),
+            "description": document.getElementById("new-task").value,
+            "isCompleted": false
+        };
+        renderTaskElement(newTask);
+        const postXhttp = new XMLHttpRequest();
+        postXhttp.open("POST", "https://wtka97jyek.execute-api.eu-west-1.amazonaws.com/default/create-task-serverless-task-list", true);
+        postXhttp.send(JSON.stringify(newTask));
+        document.getElementById("new-task").value = "";
+    };
+    document.getElementById("add-new-task").addEventListener("click", addTask);
+
+    const renderTaskElement = function (task) {
+        const listItem = document.createElement("div");
+        listItem.id = task.PK;
+
+        const checkBox = document.createElement("input");
+        checkBox.type = "checkBox";
+        checkBox.onchange = toggleTaskState;
+        checkBox.checked = task.isCompleted;
+        listItem.appendChild(checkBox);
+
+        const deleteButton = document.createElement("button");
+        deleteButton.innerText = "X";
+        deleteButton.onclick = deleteTask;
+        listItem.appendChild(deleteButton);
+
+        listItem.appendChild(document.createTextNode(task.description));
+        listItem.style.textDecoration = task.isCompleted ? "line-through" : "none";
+
+        document.getElementById("tasks-holder").appendChild(listItem);
+    };
+
+    const deleteTask = function () {
+        const listItem = this.parentNode;
+        const taskHolder = listItem.parentNode;
+        taskHolder.removeChild(listItem);
+        const deleteXhttp = new XMLHttpRequest();
+        deleteXhttp.open("DELETE", "https://wtka97jyek.execute-api.eu-west-1.amazonaws.com/default/deleting-task-serverless-task-list", true);
+        deleteXhttp.send(JSON.stringify({"PK": listItem.id}));
+    };
+
+    const toggleTaskState = function () {
+        let isCompleted = this.parentNode.querySelector('input[type="checkbox"]').checked;
+        let updatedTask = {
+            "PK": this.parentNode.id,
+            "description": this.parentNode.textContent.substr(1), // substr(1) to remove the X from the delete button
+            "isCompleted": isCompleted
+        };
+        const postXhttp = new XMLHttpRequest();
+        postXhttp.open("POST", "https://wtka97jyek.execute-api.eu-west-1.amazonaws.com/default/create-task-serverless-task-list", true);
+        postXhttp.send(JSON.stringify(updatedTask));
+        if (isCompleted)
+            this.parentNode.style.textDecoration = "line-through";
+        else
+            this.parentNode.style.textDecoration = "none";
+    };
+
+    const getXhttp = new XMLHttpRequest();
+    getXhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200)
+            JSON.parse(this.response).forEach(renderTaskElement);
+    };
+    getXhttp.open("GET", "https://wtka97jyek.execute-api.eu-west-1.amazonaws.com/default/get-all-tasks-serverless-task-list", true);
+    getXhttp.send();
+</script>
+</body>
+</html>
