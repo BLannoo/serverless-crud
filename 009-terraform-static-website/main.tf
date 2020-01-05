@@ -56,7 +56,7 @@ module "s3-front-end-deploy" {
 
   bucket-name = "${local.project-name}-bucket"
   api-gateway-id = module.lambda-backend-skeleton.api_gateway_id
-  index-template-location = "./resources/index.html.template"
+  index-template-location = "./resources/index.template.html"
 }
 
 module "dynamodb-persistence" {
