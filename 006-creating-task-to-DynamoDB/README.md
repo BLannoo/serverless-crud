@@ -7,6 +7,7 @@
     1) Create a lambda function for your backend: `create-task-serverless-task-list`
         * With the existing IAM Role: `serverless-task-list-role`
         * Based on this [script](create-task-serverless-task-list.py)
+        * add 'tableName' as an environment variable with value 'task-list'
     2) Add API Gateway as trigger: (default name: `get-all-tasks-serverless-task-list-API`)
         * This can be done from the AWS::Lambda service
         * Security: Open (TODO: add security)

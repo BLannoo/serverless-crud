@@ -1,5 +1,6 @@
 import json
 import boto3
+import os
 
 dynamodb = boto3.client('dynamodb')
 
@@ -7,7 +8,7 @@ dynamodb = boto3.client('dynamodb')
 def lambda_handler(event, context):
     data = json.loads(event['body'])
     dynamodb.put_item(
-        TableName='task-list',
+        TableName=os.environ['tableName'],
         Item={
             'PK': {'S': data['PK']},
             'description': {'S': data['description']},

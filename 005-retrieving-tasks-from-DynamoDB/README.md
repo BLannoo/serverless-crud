@@ -10,4 +10,5 @@ https://aws.amazon.com/getting-started/projects/data-modeling-gaming-app-with-dy
     * {"PK": "TASK#7aac9f6e-b959-4766-8ae1-c35d46ad956c", "description": "See the Doctor", "isCompleted": True},
 3) Update [lambda](get-all-tasks-serverless-task-list.py) to retrieve your tasks from DynamoDB
     * remark: fields are dictionnaries with the type as key and the data as value
+    * add 'tableName' as an environment variable with value 'task-list'
     
