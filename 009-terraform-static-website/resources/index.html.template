@@ -6,9 +6,17 @@
     <h3>Tasks:</h3>
     <div id="tasks-holder"></div>
 </div>
+<script src="http://wzrd.in/standalone/uuid%2Fv4@latest"></script>
 <script>
     const addTask = function () {
         renderTaskElement(document.getElementById("new-task").value, false);
+        const postXhttp = new XMLHttpRequest();
+        postXhttp.open("POST", "https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/tasks", true);
+        postXhttp.send(JSON.stringify({
+            "PK": "TASK#" + uuidv4(),
+            "description": document.getElementById("new-task").value,
+            "isCompleted": false
+        }));
         document.getElementById("new-task").value = "";
     };
     document.getElementById("add-new-task").addEventListener("click", addTask);
@@ -46,16 +54,16 @@
             this.parentNode.style.textDecoration = "none";
     };
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
+    const getXhttp = new XMLHttpRequest();
+    getXhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             let tasks = JSON.parse(this.response);
             for (let i = 0; i < tasks.length; i++)
                 renderTaskElement(tasks[i].description, tasks[i].isCompleted)
         }
     };
-    xhttp.open("GET", "https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/tasks", true);
-    xhttp.send();
+    getXhttp.open("GET", "https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/tasks", true);
+    getXhttp.send();
 </script>
 </body>
 </html>
