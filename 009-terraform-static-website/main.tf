@@ -25,3 +25,9 @@ module "s3-front-end-deploy" {
   api-gateway-id = module.get_all_tasks_lambda.api_gateway_id
   index-template-location = "./resources/index.html.template"
 }
+
+module "dynamodb-persistence" {
+  source = "./modules/dynamodb-persistence"
+
+  project-name = local.project-name
+}

@@ -14,4 +14,9 @@ resource "aws_lambda_function" "get_all_tasks_lambda" {
   handler = "get-all-tasks-serverless-task-list.lambda_handler"
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   runtime = "python3.8"
+  environment {
+    variables = {
+      tableName = var.project-name
+    }
+  }
 }
