@@ -1,12 +1,12 @@
-resource "aws_api_gateway_method" "rest_method_get_all_tasks" {
+resource "aws_api_gateway_method" "rest_method" {
   rest_api_id = var.api-gateway-id
   resource_id = var.api-gateway-resource-id
   http_method = var.rest-method
   authorization = "NONE"
 }
 
-resource "aws_api_gateway_integration" "couple_api_and_lambda_get_all_tasks" {
-  http_method = aws_api_gateway_method.rest_method_get_all_tasks.http_method
+resource "aws_api_gateway_integration" "couple_api_and_lambda" {
+  http_method = aws_api_gateway_method.rest_method.http_method
   integration_http_method = "POST"
   resource_id = var.api-gateway-resource-id
   rest_api_id = var.api-gateway-id
@@ -23,5 +23,5 @@ resource "aws_lambda_permission" "api_lambda_permission" {
 }
 
 output "api-lambda-coupling" {
-  value = aws_api_gateway_integration.couple_api_and_lambda_get_all_tasks
+  value = aws_api_gateway_integration.couple_api_and_lambda
 }
