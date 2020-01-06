@@ -42,10 +42,24 @@ module "create-task-serverless-task-list" {
   api-gateway-execution-arn = module.lambda-backend-skeleton.api_gateway_execution_arn
 }
 
+module "deleting-task-serverless-task-list" {
+  source = "./modules/lambda-backend"
+
+  src-filename = "deleting-task-serverless-task-list"
+  project-name = local.project-name
+  rest-method = "DELETE"
+  lambda-role-arn = module.lambda-backend-skeleton.lambda-role-arn
+  api-gateway-id = module.lambda-backend-skeleton.api_gateway_id
+  api-gateway-resource-id = module.lambda-backend-skeleton.api_gateway_resource_id
+  api-gateway-execution-arn = module.lambda-backend-skeleton.api_gateway_execution_arn
+}
+
 resource "aws_api_gateway_deployment" "deploying_api_gateway" {
+  // TODO: figure out if these dependencies are enough/nescessarry
   depends_on = [
     module.get_all_tasks_lambda.api-lambda-coupling,
-    module.create-task-serverless-task-list.api-lambda-coupling
+    module.create-task-serverless-task-list.api-lambda-coupling,
+    module.deleting-task-serverless-task-list.api-lambda-coupling
   ]
   rest_api_id = module.lambda-backend-skeleton.api_gateway_id
   stage_name = "default"
