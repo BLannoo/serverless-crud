@@ -44,6 +44,7 @@ resource "aws_api_gateway_method_response" "options_mock_response" {
 
 resource "aws_api_gateway_integration_response" "options_mock_integration" {
   // TODO: investigate which dependencies are really nescessary
+  //  (used also to force all those steps to be run before the deployment)
   depends_on = [
     aws_api_gateway_method.options_pre_flight,
     aws_api_gateway_integration.options_mock_integration,
@@ -70,4 +71,8 @@ output "api_gateway_resource_id" {
 
 output "api_gateway_execution_arn" {
   value = aws_api_gateway_rest_api.api.execution_arn
+}
+
+output "options_method_configured" {
+  value = aws_api_gateway_integration_response.options_mock_integration
 }

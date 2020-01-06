@@ -59,7 +59,8 @@ resource "aws_api_gateway_deployment" "deploying_api_gateway" {
   depends_on = [
     module.get_all_tasks_lambda.api-lambda-coupling,
     module.create-task-serverless-task-list.api-lambda-coupling,
-    module.deleting-task-serverless-task-list.api-lambda-coupling
+    module.deleting-task-serverless-task-list.api-lambda-coupling,
+    module.lambda-backend-skeleton.options_method_configured
   ]
   rest_api_id = module.lambda-backend-skeleton.api_gateway_id
   stage_name = "default"
