@@ -17,6 +17,9 @@ resource "aws_s3_bucket" "s3-static-bucket" {
 }
 
 resource "aws_s3_bucket_object" "index-file" {
+  depends_on = [
+    aws_s3_bucket.s3-static-bucket
+  ]
   bucket = var.bucket-name
   key = "index.html"
   content = templatefile(var.index-template-location, {
@@ -29,6 +32,9 @@ resource "aws_s3_bucket_object" "index-file" {
 }
 
 resource "aws_s3_bucket_object" "error-file" {
+  depends_on = [
+    aws_s3_bucket.s3-static-bucket
+  ]
   bucket = var.bucket-name
   key = "error.html"
   source = "${path.module}/error.html"
