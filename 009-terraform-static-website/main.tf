@@ -9,73 +9,73 @@ provider "archive" {
 }
 
 locals {
-  project-name = "terraform-crud-experiment-full"
+  project_name = "terraform-crud-experiment-3"
 }
 
-module "lambda-backend-skeleton" {
+module "lambda_backend_skeleton" {
   source = "./modules/lambda-backend-skeleton"
 
-  project-name = local.project-name
+  project_name = local.project_name
 }
 
 module "get_all_tasks_lambda" {
   source = "./modules/lambda-backend"
 
-  src-filename = "get-all-tasks-serverless-task-list"
-  project-name = local.project-name
-  rest-method = "GET"
-  lambda-role-arn = module.lambda-backend-skeleton.lambda-role-arn
-  api-gateway-id = module.lambda-backend-skeleton.api_gateway_id
-  api-gateway-resource-id = module.lambda-backend-skeleton.api_gateway_resource_id
-  api-gateway-execution-arn = module.lambda-backend-skeleton.api_gateway_execution_arn
+  src_filename = "get-all-tasks"
+  project_name = local.project_name
+  rest_method = "GET"
+  lambda_role_arn = module.lambda_backend_skeleton.lambda_role_arn
+  api_gateway_id = module.lambda_backend_skeleton.api_gateway_id
+  api_gateway_resource_id = module.lambda_backend_skeleton.api_gateway_resource_id
+  api_gateway_execution_arn = module.lambda_backend_skeleton.api_gateway_execution_arn
 }
 
-module "create-task-serverless-task-list" {
+module "create_task_lambda" {
   source = "./modules/lambda-backend"
 
-  src-filename = "create-task-serverless-task-list"
-  project-name = local.project-name
-  rest-method = "POST"
-  lambda-role-arn = module.lambda-backend-skeleton.lambda-role-arn
-  api-gateway-id = module.lambda-backend-skeleton.api_gateway_id
-  api-gateway-resource-id = module.lambda-backend-skeleton.api_gateway_resource_id
-  api-gateway-execution-arn = module.lambda-backend-skeleton.api_gateway_execution_arn
+  src_filename = "create-task"
+  project_name = local.project_name
+  rest_method = "POST"
+  lambda_role_arn = module.lambda_backend_skeleton.lambda_role_arn
+  api_gateway_id = module.lambda_backend_skeleton.api_gateway_id
+  api_gateway_resource_id = module.lambda_backend_skeleton.api_gateway_resource_id
+  api_gateway_execution_arn = module.lambda_backend_skeleton.api_gateway_execution_arn
 }
 
-module "deleting-task-serverless-task-list" {
+module "deleting_task_lambda" {
   source = "./modules/lambda-backend"
 
-  src-filename = "deleting-task-serverless-task-list"
-  project-name = local.project-name
-  rest-method = "DELETE"
-  lambda-role-arn = module.lambda-backend-skeleton.lambda-role-arn
-  api-gateway-id = module.lambda-backend-skeleton.api_gateway_id
-  api-gateway-resource-id = module.lambda-backend-skeleton.api_gateway_resource_id
-  api-gateway-execution-arn = module.lambda-backend-skeleton.api_gateway_execution_arn
+  src_filename = "deleting-task"
+  project_name = local.project_name
+  rest_method = "DELETE"
+  lambda_role_arn = module.lambda_backend_skeleton.lambda_role_arn
+  api_gateway_id = module.lambda_backend_skeleton.api_gateway_id
+  api_gateway_resource_id = module.lambda_backend_skeleton.api_gateway_resource_id
+  api_gateway_execution_arn = module.lambda_backend_skeleton.api_gateway_execution_arn
 }
 
 resource "aws_api_gateway_deployment" "deploying_api_gateway" {
   // TODO: figure out if these dependencies are enough/nescessarry
   depends_on = [
-    module.get_all_tasks_lambda.api-lambda-coupling,
-    module.create-task-serverless-task-list.api-lambda-coupling,
-    module.deleting-task-serverless-task-list.api-lambda-coupling,
-    module.lambda-backend-skeleton.options_method_configured
+    module.get_all_tasks_lambda.api_lambda_integration,
+    module.create_task_lambda.api_lambda_integration,
+    module.deleting_task_lambda.api_lambda_integration,
+    module.lambda_backend_skeleton.options_method_configured
   ]
-  rest_api_id = module.lambda-backend-skeleton.api_gateway_id
+  rest_api_id = module.lambda_backend_skeleton.api_gateway_id
   stage_name = "default"
 }
 
-module "s3-front-end-deploy" {
+module "s3_front_end_deploy" {
   source = "./modules/s3-frontend"
 
-  bucket-name = "${local.project-name}-bucket"
-  api-gateway-id = module.lambda-backend-skeleton.api_gateway_id
-  index-template-location = "./resources/index.template.html"
+  bucket_name = "${local.project_name}-bucket"
+  api_gateway_id = module.lambda_backend_skeleton.api_gateway_id
+  index_template_location = "./resources/index.template.html"
 }
 
-module "dynamodb-persistence" {
+module "dynamodb_persistence" {
   source = "./modules/dynamodb-persistence"
 
-  project-name = local.project-name
+  project_name = local.project_name
 }

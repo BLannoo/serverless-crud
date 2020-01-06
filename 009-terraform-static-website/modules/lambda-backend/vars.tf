@@ -1,13 +1,13 @@
-variable "project-name" {}
+variable "project_name" {}
 
-variable "lambda-role-arn" {}
+variable "lambda_role_arn" {}
 
-variable "api-gateway-id" {}
+variable "api_gateway_id" {}
 
-variable "api-gateway-resource-id" {}
+variable "api_gateway_resource_id" {}
 
-variable "api-gateway-execution-arn" {}
+variable "api_gateway_execution_arn" {}
 
-variable "src-filename" {}
+variable "src_filename" {}
 
-variable "rest-method" {}
+variable "rest_method" {}

@@ -1,7 +1,7 @@
-variable "project-name" {}
+variable "project_name" {}
 
 resource "aws_dynamodb_table" "db" {
-  name = var.project-name
+  name = var.project_name
   read_capacity = 5
   write_capacity = 5
   hash_key = "PK"
