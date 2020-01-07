@@ -9,7 +9,7 @@ provider "archive" {
 }
 
 locals {
-  project_name = "terraform-crud-experiment-3"
+  project_name = "terraform-crud-experiment"
 }
 
 module "lambda_backend_skeleton" {
