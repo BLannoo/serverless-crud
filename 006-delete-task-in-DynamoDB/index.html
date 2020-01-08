@@ -16,7 +16,7 @@
         };
         renderTaskElement(newTask);
         const postXhttp = new XMLHttpRequest();
-        postXhttp.open("POST", "https://wtka97jyek.execute-api.eu-west-1.amazonaws.com/default/create-task-serverless-task-list", true);
+        postXhttp.open("POST", "https://XXXXXXXXXX.execute-api.eu-west-1.amazonaws.com/default/console-crud-experiment-create-task", true);
         postXhttp.send(JSON.stringify(newTask));
         document.getElementById("new-task").value = "";
     };
@@ -48,12 +48,21 @@
         const taskHolder = listItem.parentNode;
         taskHolder.removeChild(listItem);
         const deleteXhttp = new XMLHttpRequest();
-        deleteXhttp.open("DELETE", "https://wtka97jyek.execute-api.eu-west-1.amazonaws.com/default/deleting-task-serverless-task-list", true);
+        deleteXhttp.open("DELETE", "https://XXXXXXXXXX.execute-api.eu-west-1.amazonaws.com/default/console-crud-experiment-delete-task", true);
         deleteXhttp.send(JSON.stringify({"PK": listItem.id}));
     };
 
     const toggleTaskState = function () {
-        if (this.parentNode.querySelector('input[type="checkbox"]').checked)
+        let isCompleted = this.parentNode.querySelector('input[type="checkbox"]').checked;
+        let updatedTask = {
+            "PK": this.parentNode.id,
+            "description": this.parentNode.textContent.substr(1), // substr(1) to remove the X from the delete button
+            "isCompleted": isCompleted
+        };
+        const postXhttp = new XMLHttpRequest();
+        postXhttp.open("POST", "https://XXXXXXXXXX.execute-api.eu-west-1.amazonaws.com/default/console-crud-experiment-create-task", true);
+        postXhttp.send(JSON.stringify(updatedTask));
+        if (isCompleted)
             this.parentNode.style.textDecoration = "line-through";
         else
             this.parentNode.style.textDecoration = "none";
@@ -64,7 +73,7 @@
         if (this.readyState == 4 && this.status == 200)
             JSON.parse(this.response).forEach(renderTaskElement);
     };
-    getXhttp.open("GET", "https://wtka97jyek.execute-api.eu-west-1.amazonaws.com/default/get-all-tasks-serverless-task-list", true);
+    getXhttp.open("GET", "https://XXXXXXXXXX.execute-api.eu-west-1.amazonaws.com/default/console-crud-experiment-get-tasks", true);
     getXhttp.send();
 </script>
 </body>

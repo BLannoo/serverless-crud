@@ -8,18 +8,18 @@
 </div>
 <script>
     const addTask = function () {
-        renderTaskElement(document.getElementById("new-task").value, false);
+        renderTaskElement({description: document.getElementById("new-task").value, isCompleted: false});
         document.getElementById("new-task").value = "";
     };
     document.getElementById("add-new-task").addEventListener("click", addTask);
 
-    const renderTaskElement = function (description, isCompleted) {
+    const renderTaskElement = function (task) {
         const listItem = document.createElement("div");
 
         const checkBox = document.createElement("input");
         checkBox.type = "checkBox";
         checkBox.onchange = toggleTaskState;
-        checkBox.checked = isCompleted;
+        checkBox.checked = task.isCompleted;
         listItem.appendChild(checkBox);
 
         const deleteButton = document.createElement("button");
@@ -27,8 +27,8 @@
         deleteButton.onclick = deleteTask;
         listItem.appendChild(deleteButton);
 
-        listItem.appendChild(document.createTextNode(description));
-        listItem.style.textDecoration = isCompleted ? "line-through" : "none";
+        listItem.appendChild(document.createTextNode(task.description));
+        listItem.style.textDecoration = task.isCompleted ? "line-through" : "none";
 
         document.getElementById("tasks-holder").appendChild(listItem);
     };
@@ -46,8 +46,8 @@
             this.parentNode.style.textDecoration = "none";
     };
 
-    renderTaskElement("Pay Bills", false);
-    renderTaskElement("Go Shopping", true);
+    renderTaskElement({description: "Pay Bills", isCompleted: false});
+    renderTaskElement({description: "Go Shopping", isCompleted: true});
 </script>
 </body>
 </html>

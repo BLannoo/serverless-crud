@@ -45,7 +45,7 @@ module "create_task_lambda" {
 module "deleting_task_lambda" {
   source = "./modules/lambda-backend"
 
-  src_filename = "deleting-task"
+  src_filename = "delete-task"
   project_name = local.project_name
   rest_method = "DELETE"
   lambda_role_arn = module.lambda_backend_skeleton.lambda_role_arn

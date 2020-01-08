@@ -16,7 +16,7 @@
         };
         renderTaskElement(newTask);
         const postXhttp = new XMLHttpRequest();
-        postXhttp.open("POST", "https://wtka97jyek.execute-api.eu-west-1.amazonaws.com/default/create-task-serverless-task-list", true);
+        postXhttp.open("POST", "https://XXXXXXXXXX.execute-api.eu-west-1.amazonaws.com/default/console-crud-experiment-create-task", true);
         postXhttp.send(JSON.stringify(newTask));
         document.getElementById("new-task").value = "";
     };
@@ -24,7 +24,6 @@
 
     const renderTaskElement = function (task) {
         const listItem = document.createElement("div");
-        listItem.id = task.PK;
 
         const checkBox = document.createElement("input");
         checkBox.type = "checkBox";
@@ -47,9 +46,6 @@
         const listItem = this.parentNode;
         const taskHolder = listItem.parentNode;
         taskHolder.removeChild(listItem);
-        const deleteXhttp = new XMLHttpRequest();
-        deleteXhttp.open("DELETE", "https://wtka97jyek.execute-api.eu-west-1.amazonaws.com/default/deleting-task-serverless-task-list", true);
-        deleteXhttp.send(JSON.stringify({"PK": listItem.id}));
     };
 
     const toggleTaskState = function () {
@@ -60,7 +56,7 @@
             "isCompleted": isCompleted
         };
         const postXhttp = new XMLHttpRequest();
-        postXhttp.open("POST", "https://wtka97jyek.execute-api.eu-west-1.amazonaws.com/default/create-task-serverless-task-list", true);
+        postXhttp.open("POST", "https://XXXXXXXXXX.execute-api.eu-west-1.amazonaws.com/default/console-crud-experiment-create-task", true);
         postXhttp.send(JSON.stringify(updatedTask));
         if (isCompleted)
             this.parentNode.style.textDecoration = "line-through";
@@ -73,7 +69,7 @@
         if (this.readyState == 4 && this.status == 200)
             JSON.parse(this.response).forEach(renderTaskElement);
     };
-    getXhttp.open("GET", "https://wtka97jyek.execute-api.eu-west-1.amazonaws.com/default/get-all-tasks-serverless-task-list", true);
+    getXhttp.open("GET", "https://XXXXXXXXXX.execute-api.eu-west-1.amazonaws.com/default/console-crud-experiment-get-tasks", true);
     getXhttp.send();
 </script>
 </body>
