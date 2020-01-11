@@ -1,0 +1,39 @@
+<html>
+<body>
+<div id="app" style="width: 400px; margin: 100px auto 0;">
+    <input v-model="newDescription" id="new-task-vue" type="text">
+    <button @click="addTask">Add task</button>
+    <h3>Tasks:</h3>
+    <div v-for="task in tasks">
+        <input type="checkbox" @change="toggleTaskState(task)" :checked="task.isCompleted">
+        <button @click="deleteTask(task)">X</button>
+        <span :style="{ textDecoration: task.isCompleted ? 'line-through' : 'None' }">{{ task.description }}</span>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            newDescription: null,
+            tasks: [
+                {description: "Pay Bills", isCompleted: false},
+                {description: "Go Shopping", isCompleted: true}
+            ]
+        },
+        methods: {
+            addTask() {
+                this.tasks.push({description: this.newDescription, isCompleted: false});
+                this.newDescription = null;
+            },
+            deleteTask(task) {
+                this.tasks.splice(this.tasks.indexOf(task), 1);
+            },
+            toggleTaskState(task) {
+                task.isCompleted = !task.isCompleted;
+            }
+        }
+    });
+</script>
+</body>
+</html>
