@@ -26,7 +26,7 @@ module "get_all_tasks_lambda" {
   rest_method = "GET"
   lambda_role_arn = module.lambda_backend_skeleton.lambda_role_arn
   api_gateway_id = module.lambda_backend_skeleton.api_gateway_id
-  api_gateway_resource_id = module.lambda_backend_skeleton.api_gateway_resource_id
+  api_gateway_root = module.lambda_backend_skeleton.api_gateway_root
   api_gateway_execution_arn = module.lambda_backend_skeleton.api_gateway_execution_arn
 }
 
@@ -38,7 +38,7 @@ module "create_task_lambda" {
   rest_method = "POST"
   lambda_role_arn = module.lambda_backend_skeleton.lambda_role_arn
   api_gateway_id = module.lambda_backend_skeleton.api_gateway_id
-  api_gateway_resource_id = module.lambda_backend_skeleton.api_gateway_resource_id
+  api_gateway_root = module.lambda_backend_skeleton.api_gateway_root
   api_gateway_execution_arn = module.lambda_backend_skeleton.api_gateway_execution_arn
 }
 
@@ -47,10 +47,10 @@ module "deleting_task_lambda" {
 
   src_filename = "delete-task"
   project_name = local.project_name
-  rest_method = "DELETE"
+  rest_method = "POST"
   lambda_role_arn = module.lambda_backend_skeleton.lambda_role_arn
   api_gateway_id = module.lambda_backend_skeleton.api_gateway_id
-  api_gateway_resource_id = module.lambda_backend_skeleton.api_gateway_resource_id
+  api_gateway_root = module.lambda_backend_skeleton.api_gateway_root
   api_gateway_execution_arn = module.lambda_backend_skeleton.api_gateway_execution_arn
 }
 
@@ -59,9 +59,10 @@ resource "aws_api_gateway_deployment" "deploying_api_gateway" {
   depends_on = [
     module.get_all_tasks_lambda.api_lambda_integration,
     module.create_task_lambda.api_lambda_integration,
-    module.deleting_task_lambda.api_lambda_integration,
-    module.lambda_backend_skeleton.options_method_configured
+    module.deleting_task_lambda.api_lambda_integration
   ]
+  stage_description = md5(file("modules/lambda-backend/api-gateway.tf"))
+
   rest_api_id = module.lambda_backend_skeleton.api_gateway_id
   stage_name = "default"
 }

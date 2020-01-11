@@ -16,7 +16,7 @@
         };
         renderTaskElement(newTask);
         const postXhttp = new XMLHttpRequest();
-        postXhttp.open("POST", "https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/tasks", true);
+        postXhttp.open("POST", "https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/create-task", true);
         postXhttp.send(JSON.stringify(newTask));
         document.getElementById("new-task").value = "";
     };
@@ -48,7 +48,7 @@
         const taskHolder = listItem.parentNode;
         taskHolder.removeChild(listItem);
         const deleteXhttp = new XMLHttpRequest();
-        deleteXhttp.open("DELETE", "https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/tasks", true);
+        deleteXhttp.open("POST", "https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/delete-task", true);
         deleteXhttp.send(JSON.stringify({"PK": listItem.id}));
     };
 
@@ -60,7 +60,7 @@
             "isCompleted": isCompleted
         };
         const postXhttp = new XMLHttpRequest();
-        postXhttp.open("POST", "https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/tasks", true);
+        postXhttp.open("POST", "https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/create-task", true);
         postXhttp.send(JSON.stringify(updatedTask));
         if (isCompleted)
             this.parentNode.style.textDecoration = "line-through";
@@ -73,7 +73,7 @@
         if (this.readyState == 4 && this.status == 200)
             JSON.parse(this.response).forEach(renderTaskElement);
     };
-    getXhttp.open("GET", "https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/tasks", true);
+    getXhttp.open("GET", "https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/get-all-tasks", true);
     getXhttp.send();
 </script>
 </body>
