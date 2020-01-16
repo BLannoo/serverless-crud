@@ -19,64 +19,26 @@
             * Based on the Policy template: `Simple microservice permissions`
         * Based on this [script](get-all-tasks.py)
         * add 'tableName' as an environment variable with value 'console-crud-experiment-db'
-    2) Add API Gateway as trigger: (not the default name, but: `console-crud-experiment-API`)
-        * This can be done from the AWS::Lambda service
-        * Security: Open (TODO: add security)
-    3) recreate your API-Gateway-method as 'GET' instead of 'ANY'
-        * select: Use Lambda Proxy integration
-    4) Deploy your API
+    2) Create an API Gateway: (REST API), API name: `console-crud-experiment-API`
+    3) Add a resource to your API Gateway: Actions > Create Resource: Resource Name: `get-all-tasks`
+        * With a method: Actions > Create Method: GET
+            * Use Lambda Proxy integration: true
+            * Lambda Function: `console-crud-experiment-get-all-tasks`
+    4) Deploy your API: Actions > Deploy API: Deployment stage: [New Stage], Stage name: default
     5) Adapt index.html to call you lambda (fill in your api-gateway-id in XXXXXXXXXX)
-    ```javascript
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                let tasks = JSON.parse(this.response);
-                for (let i = 0; i < tasks.length; i++)
-                    renderTaskElement(tasks[i].description, tasks[i].isCompleted)
-            }
-        };
-        xhttp.open("GET", "https://XXXXXXXXXX.execute-api.eu-west-1.amazonaws.com/default/console-crud-experiment-get-tasks", true);
-        xhttp.send();
-    ```
 3) Setup a lambda + update api-gateway for pushing data to DynamoDB
     1) Create a lambda function for your backend: `console-crud-experiment-create-task`
         * With the existing IAM Role: `console-crud-experiment-role`
         * Based on this [script](create-task.py)
-        * add 'tableName' as an environment variable with value 'console-crud-experiment-db'
-    2) Add API Gateway as trigger: (default name: `console-crud-experiment-API`)
-        * This can be done from the AWS::Lambda service
-        * Security: Open (TODO: add security)
-    3) recreate your API-Gateway-method as 'POST' instead of 'ANY'
-        * select: Use Lambda Proxy integration
-    4) (optional) create 'OPTIONS' (preflight request) API-Gateway-method using: Actions -> Enable CORS
-        * Not necessary for POST without any extra headers 
-    5) Deploy your API
-    6) Adapt your index.html with: 
-    `<script src="http://wzrd.in/standalone/uuid%2Fv4@latest"></script>` 
-    and (fill in your api-gateway-id in XXXXXXXXXX)
-    ```javascript
-        const postXhttp = new XMLHttpRequest();
-        postXhttp.open("POST", "https://XXXXXXXXXX.execute-api.eu-west-1.amazonaws.com/default/console-crud-experiment-create-task", true);
-        postXhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        postXhttp.send(JSON.stringify({
-            "PK": uuidv4(),
-            "description": document.getElementById("new-task").value,
-            "isCompleted": false
-        }));
-    ```
+        * add 'tableName' as an environment variable with value `console-crud-experiment-db`
+    2) Add a resource to your API Gateway: Actions > Create Resource: Resource Name: `create-task`
+        * With a method: Actions > Create Method: POST
+            * Use Lambda Proxy integration: true
+            * Lambda Function: `console-crud-experiment-create-task`
+    4) Deploy your API: Actions > Deploy API: Deployment stage: default
+    5) Adapt index.html to call you lambda (fill in your api-gateway-id in XXXXXXXXXX)
 4) Enable updates reusing the create endpoint
     1) Adapt your index.html with (fill in your api-gateway-id in XXXXXXXXXX)
-    ```javascript
-        let isCompleted = this.parentNode.querySelector('input[type="checkbox"]').checked;
-        let updatedTask = {
-            "PK": this.parentNode.id,
-            "description": this.parentNode.textContent.substr(1), // substr(1) to remove the X from the delete button
-            "isCompleted": isCompleted
-        };
-        const postXhttp = new XMLHttpRequest();
-        postXhttp.open("POST", "https://XXXXXXXXXX.execute-api.eu-west-1.amazonaws.com/default/console-crud-experiment-create-task", true);
-        postXhttp.send(JSON.stringify(updatedTask));
-    ```
 
 ## Generated resources (to delete to undo this setup):
 * S3::Bucket: `console-crud-experiment-db`
