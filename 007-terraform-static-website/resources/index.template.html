@@ -1,80 +1,55 @@
 <html>
 <body>
-<div style="width: 400px; margin: 100px auto 0;">
-    <input id="new-task" type="text">
-    <button id="add-new-task">Add task</button>
+<div id="app" style="width: 400px; margin: 100px auto 0;">
+    <input v-model="newDescription" id="new-task-vue" type="text">
+    <button @click="addTask">Add task</button>
     <h3>Tasks:</h3>
-    <div id="tasks-holder"></div>
+    <div v-for="task in tasks">
+        <input type="checkbox" @change="toggleTaskState(task)" :checked="task.isCompleted">
+        <button @click="deleteTask(task)">X</button>
+        <span :style="{ textDecoration: task.isCompleted ? 'line-through' : 'None' }">{{ task.description }}</span>
+    </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="http://wzrd.in/standalone/uuid%2Fv4@latest"></script>
 <script>
-    const addTask = function () {
-        let newTask = {
-            "PK": "TASK#" + uuidv4(),
-            "description": document.getElementById("new-task").value,
-            "isCompleted": false
-        };
-        renderTaskElement(newTask);
-        const postXhttp = new XMLHttpRequest();
-        postXhttp.open("POST", "https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/create-task", true);
-        postXhttp.send(JSON.stringify(newTask));
-        document.getElementById("new-task").value = "";
-    };
-    document.getElementById("add-new-task").addEventListener("click", addTask);
-
-    const renderTaskElement = function (task) {
-        const listItem = document.createElement("div");
-        listItem.id = task.PK;
-
-        const checkBox = document.createElement("input");
-        checkBox.type = "checkBox";
-        checkBox.onchange = toggleTaskState;
-        checkBox.checked = task.isCompleted;
-        listItem.appendChild(checkBox);
-
-        const deleteButton = document.createElement("button");
-        deleteButton.innerText = "X";
-        deleteButton.onclick = deleteTask;
-        listItem.appendChild(deleteButton);
-
-        listItem.appendChild(document.createTextNode(task.description));
-        listItem.style.textDecoration = task.isCompleted ? "line-through" : "none";
-
-        document.getElementById("tasks-holder").appendChild(listItem);
-    };
-
-    const deleteTask = function () {
-        const listItem = this.parentNode;
-        const taskHolder = listItem.parentNode;
-        taskHolder.removeChild(listItem);
-        const deleteXhttp = new XMLHttpRequest();
-        deleteXhttp.open("POST", "https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/delete-task", true);
-        deleteXhttp.send(JSON.stringify({"PK": listItem.id}));
-    };
-
-    const toggleTaskState = function () {
-        let isCompleted = this.parentNode.querySelector('input[type="checkbox"]').checked;
-        let updatedTask = {
-            "PK": this.parentNode.id,
-            "description": this.parentNode.textContent.substr(1), // substr(1) to remove the X from the delete button
-            "isCompleted": isCompleted
-        };
-        const postXhttp = new XMLHttpRequest();
-        postXhttp.open("POST", "https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/create-task", true);
-        postXhttp.send(JSON.stringify(updatedTask));
-        if (isCompleted)
-            this.parentNode.style.textDecoration = "line-through";
-        else
-            this.parentNode.style.textDecoration = "none";
-    };
-
-    const getXhttp = new XMLHttpRequest();
-    getXhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200)
-            JSON.parse(this.response).forEach(renderTaskElement);
-    };
-    getXhttp.open("GET", "https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/get-all-tasks", true);
-    getXhttp.send();
+    const axiosInstance = axios.create({
+        baseURL: 'https://${api-gateway-id}.execute-api.eu-west-1.amazonaws.com/default/',
+        headers: {'Content-Type': 'text/plain'}
+    });
+    new Vue({
+        el: '#app',
+        data: {
+            newDescription: null,
+            tasks: []
+        },
+        methods: {
+            addTask() {
+                let newTask = {
+                    PK: "TASK#" + uuidv4(),
+                    description: this.newDescription,
+                    isCompleted: false
+                };
+                this.tasks.push(newTask);
+                this.newDescription = null;
+                axiosInstance.post("create-task", newTask);
+            },
+            deleteTask(task) {
+                this.tasks.splice(this.tasks.indexOf(task), 1);
+                axiosInstance.post("delete-task", task);
+            },
+            toggleTaskState(task) {
+                task.isCompleted = !task.isCompleted;
+                axiosInstance.post("create-task", task);
+            }
+        },
+        mounted() {
+            axiosInstance.get("get-all-tasks").then(
+                response => this.tasks = response.data
+            )
+        }
+    });
 </script>
 </body>
 </html>
